@@ -1,8 +1,8 @@
-import string
+import string, os
 
 
 def readFile(filepath):
-    with open(filepath) as file:
+    with open(os.path.join(os.path.dirname(__file__), filepath)) as file:
         line = file.readline()
         while line:
             yield line.rstrip("\n")

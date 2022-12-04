@@ -1,30 +1,33 @@
+import os
+
+
 def readFile(filepath):
-    with open(filepath) as file:
+    with open(os.path.join(os.path.dirname(__file__), filepath)) as file:
         line = file.readline()
         while line:
             yield line.rstrip("\n")
             line = file.readline()
 
 
-player = {}
-player["X"] = "Rock"
-player["Y"] = "Paper"
-player["Z"] = "Scissors"
+playerChoices = {}
+playerChoices["X"] = "Rock"
+playerChoices["Y"] = "Paper"
+playerChoices["Z"] = "Scissors"
 
-opponent = {}
-opponent["A"] = "Rock"
-opponent["B"] = "Paper"
-opponent["C"] = "Scissors"
+opponentChoices = {}
+opponentChoices["A"] = "Rock"
+opponentChoices["B"] = "Paper"
+opponentChoices["C"] = "Scissors"
 
-outcomes = {}
-outcomes["lose"] = 0
-outcomes["draw"] = 3
-outcomes["win"] = 6
+outcomeScores = {}
+outcomeScores["lose"] = 0
+outcomeScores["draw"] = 3
+outcomeScores["win"] = 6
 
-round_outcomes = {}
-round_outcomes["X"] = "lose"
-round_outcomes["Y"] = "draw"
-round_outcomes["Z"] = "win"
+roundOutcomes = {}
+roundOutcomes["X"] = "lose"
+roundOutcomes["Y"] = "draw"
+roundOutcomes["Z"] = "win"
 
 shapeScores = {}
 shapeScores["Rock"] = 1
@@ -33,8 +36,8 @@ shapeScores["Scissors"] = 3
 
 
 def strategy_one(oppenent_choice, player_choice):
-    oppenent_choice = opponent[oppenent_choice]
-    player_choice = player[player_choice]
+    oppenent_choice = opponentChoices[oppenent_choice]
+    player_choice = playerChoices[player_choice]
     winning_conditions = [
         player_choice == "Rock" and oppenent_choice != "Paper",
         player_choice == "Paper" and oppenent_choice != "Scissors",
@@ -46,13 +49,13 @@ def strategy_one(oppenent_choice, player_choice):
         outcome = "win"
     else:
         outcome = "lose"
-    score = outcomes[outcome] + shapeScores[player_choice]
+    score = outcomeScores[outcome] + shapeScores[player_choice]
     return score
 
 
 def strategy_two(opponent_choice, round_outcome):
-    opponent_choice = opponent[opponent_choice]
-    round_outcome = round_outcomes[round_outcome]
+    opponent_choice = opponentChoices[opponent_choice]
+    round_outcome = roundOutcomes[round_outcome]
     if round_outcome == "draw":
         player_choice = opponent_choice
     elif opponent_choice == "Rock":
@@ -70,7 +73,7 @@ def strategy_two(opponent_choice, round_outcome):
             player_choice = "Rock"
         elif round_outcome == "lose":
             player_choice = "Paper"
-    score = outcomes[round_outcome] + shapeScores[player_choice]
+    score = outcomeScores[round_outcome] + shapeScores[player_choice]
     return score
 
 

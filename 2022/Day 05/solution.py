@@ -1,3 +1,4 @@
+import os
 class Answers:
     def __init__(self, partOne: int = 0, partTwo: int = 0) -> None:
         self.__partOne = partOne
@@ -13,7 +14,7 @@ class Answers:
 
 
 def readFile(filepath):
-    with open(filepath) as file:
+    with open(os.path.join(os.path.dirname(__file__), filepath)) as file:
         line = file.readline()
         while line:
             yield line.rstrip("\n")
