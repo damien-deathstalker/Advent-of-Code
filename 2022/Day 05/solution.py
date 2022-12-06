@@ -25,46 +25,61 @@ def readFile(filepath):
 
 def solutionOne(fileName: str):
     result = ""
-    crate_stack:dict[str, list[str]] = {}
-    crate_regex = r"([A-Z])"
+    crate_stack: dict[str, list[str]] = {}
     instruction_regex = r"^move (?P<number_to_move>[0-9]+) from (?P<origin>[0-9]+) to (?P<destination>[0-9]+)$"
-    count = 1
     for line in readFile(f"{fileName}.txt"):
-        crates = re.findall(crate_regex, line)
-        if len(crates) > 0:
-            crates.reverse()
-            crate_stack[str(count)] = crates
-            count += 1
         instruction = re.search(instruction_regex, line)
+        if not instruction:
+            crates = [line[i : i + 4][1] for i in range(0, len(line), 4)]
+            num_crates = len(crates)
+            for num in range(0, num_crates):
+                if crates[num].strip() != "":
+                    if not re.search(r"\d", crates[num]):
+                        key = str(num + 1)
+                        if key in crate_stack.keys():
+                            crate_stack[key].insert(0, crates[num])
+                        else:
+                            crate_stack[key] = [crates[num]]
         if instruction:
             instructions = instruction.groupdict()
             for number in range(0, int(instructions["number_to_move"])):
                 crate_stack[instructions["destination"]].append(
                     crate_stack[instructions["origin"]].pop()
                 )
-    result = "".join(x[-1] for x in crate_stack.values())
+    keys = sorted(int(key) for key in crate_stack.keys())
+    result = "".join(crate_stack[str(key)][-1] for key in keys)
     return result
 
 
 def solutionTwo(fileName: str):
     result = ""
-    crate_stack:dict[str, list[str]] = {}
-    crate_regex = r"([A-Z])"
+    crate_stack: dict[str, list[str]] = {}
     instruction_regex = r"^move (?P<number_to_move>[0-9]+) from (?P<origin>[0-9]+) to (?P<destination>[0-9]+)$"
-    count = 1
     for line in readFile(f"{fileName}.txt"):
-        crates = re.findall(crate_regex, line)
-        if len(crates) > 0:
-            crates.reverse()
-            crate_stack[str(count)] = crates
-            count += 1
         instruction = re.search(instruction_regex, line)
+        if not instruction:
+            crates = [line[i : i + 4][1] for i in range(0, len(line), 4)]
+            num_crates = len(crates)
+            for num in range(0, num_crates):
+                if crates[num].strip() != "":
+                    if not re.search(r"\d", crates[num]):
+                        key = str(num + 1)
+                        if key in crate_stack.keys():
+                            crate_stack[key].insert(0, crates[num])
+                        else:
+                            crate_stack[key] = [crates[num]]
         if instruction:
             instructions = instruction.groupdict()
-            crate_stack[instructions["destination"]] += [crts for crts in crate_stack[instructions["origin"]][-int(instructions["number_to_move"]):]]
+            crate_stack[instructions["destination"]] += [
+                crts
+                for crts in crate_stack[instructions["origin"]][
+                    -int(instructions["number_to_move"]) :
+                ]
+            ]
             for number in range(0, int(instructions["number_to_move"])):
                 crate_stack[instructions["origin"]].pop()
-    result = "".join(x[-1] for x in crate_stack.values())
+    keys = sorted(int(key) for key in crate_stack.keys())
+    result = "".join(crate_stack[str(key)][-1] for key in keys)
     return result
 
 
